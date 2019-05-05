@@ -15,9 +15,33 @@ Test.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
             {title: 'aaa', field: 'aaa', visible: true, align: 'center', valign: 'middle'},
-            {title: 'bbb', field: 'bbb', visible: true, align: 'center', valign: 'middle'}
+            {title: 'bbb', field: 'bbb', visible: true, align: 'center', valign: 'middle'},
+            {title: 'bbb', field: 'bbb', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) { return value + ":" + index }},
+        {
+            field: 'operate',
+            title: '操作',
+            align: 'center',
+            valign: 'middle',
+            formatter: operateFormatter //自定义方法，添加操作按钮
+        },
+        {
+            title: '操作', visible: true, align: 'center', valign: 'middle', formatter: function (value, row, index) {
+                if (row.aaa == "12") {
+                    return '<button type="button" class="btn btn-danger button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>';
+                } else {
+                    return '<button type="button" class="btn btn-primary button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-edit"></i>&nbsp;查看</button>' ;
+                }
+            }
+        },
     ];
 };
+
+var operateFormatter = function (value, row, index) {//赋予的参数
+    return [
+        '<button class="btn btn-info btn-sm rightSize detailBtn" type="button"><i class="fa fa-paste"></i> 详情</button>',
+        '<button class="btn btn-danger btn-sm rightSize packageBtn" type="button"><i class="fa fa-envelope"></i> 通知</button>'
+    ].join('');
+}
 
 /**
  * 检查是否选中
@@ -32,6 +56,11 @@ Test.check = function () {
         return true;
     }
 };
+
+
+Test.showMessage = function (message) {
+    Feng.alert(message);
+}
 
 /**
  * 点击添加renfei
