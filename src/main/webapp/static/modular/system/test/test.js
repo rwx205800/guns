@@ -13,28 +13,22 @@ var Test = {
  */
 Test.initColumn = function () {
     return [
-        {field: 'selectItem', radio: true},
+            {field: 'selectItem', radio: true},
             {title: 'aaa', field: 'aaa', visible: true, align: 'center', valign: 'middle'},
             {title: 'bbb', field: 'bbb', visible: true, align: 'center', valign: 'middle'},
-            {title: 'bbb', field: 'bbb', visible: true, align: 'center', valign: 'middle',formatter: function (value, row, index) { return value + ":" + index }},
-        {
-            field: 'operate',
-            title: '操作',
-            align: 'center',
-            valign: 'middle',
-            formatter: operateFormatter //自定义方法，添加操作按钮
-        },
-        {
-            title: '操作', visible: true, align: 'center', valign: 'middle', formatter: function (value, row, index) {
-                if (row.aaa == "12") {
-                    return '<button type="button" class="btn btn-danger button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>';
-                } else {
-                    return '<button type="button" class="btn btn-primary button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-edit"></i>&nbsp;查看</button>' ;
+            {title: '操作',field: 'operate', align: 'center', valign: 'middle', formatter: operateFormatter },//自定义方法，添加操作按钮
+            {
+                title: '操作', visible: true, align: 'center', valign: 'middle', formatter: function (value, row, index) {
+                    if (row.aaa == "12") {
+                        return '<button type="button" class="btn btn-danger button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-arrows-alt"></i>&nbsp;删除</button>';
+                    } else {
+                        return '<button type="button" class="btn btn-primary button-margin" onclick="Test.showMessage(' + row.aaa + ')" id=""><i class="fa fa-edit"></i>&nbsp;查看</button>' ;
+                    }
                 }
             }
-        },
     ];
 };
+
 
 var operateFormatter = function (value, row, index) {//赋予的参数
     return [
@@ -120,8 +114,26 @@ Test.search = function () {
 };
 
 $(function () {
+    var columns = [];
     var defaultColunms = Test.initColumn();
-    var table = new BSTable(Test.id, "/test/list", defaultColunms);
+    columns.push({field: 'selectItem', radio: true});
+
+    $.ajax({
+        url: Feng.ctxPath + "/test/columns",
+        type: 'post',
+        data: {},
+        dataType: "json",
+        async: false,
+        success: function (returnValue) {
+            //异步获取要动态生成的列
+            var arr = returnValue;
+            $.each(arr, function (i, item) {
+                columns.push({title: item.colalias, "field": item.colname, "visible": true, "align": "center", "valign": "middle"});
+            });
+        }
+    });
+
+    var table = new BSTable(Test.id, "/test/list", columns);
     table.setPaginationType("client");
     Test.table = table.init();
 });

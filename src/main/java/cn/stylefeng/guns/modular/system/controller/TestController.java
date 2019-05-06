@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.stylefeng.guns.modular.system.model.Test;
 import cn.stylefeng.guns.modular.system.service.ITestService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * renfei控制器
@@ -70,6 +73,25 @@ public class TestController extends BaseController {
         List<Test>  testList = testService.getTest();
         LogObjectHolder.me().set(testList);
         return testService.selectList(new EntityWrapper<Test>().eq("aaa", condition));
+    }
+
+    /**
+     * 获取列
+     */
+    @RequestMapping(value = "/columns")
+    @ResponseBody
+    public Object columns() {
+        List<Map> list = new ArrayList<>();
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("colalias","税1");
+        map.put("colname","aaa");
+
+        HashMap<String,Object> map1 = new HashMap<>();
+        map1.put("colalias","税2");
+        map1.put("colname","bbb");
+        list.add(map);
+        list.add(map1);
+        return list;
     }
 
     /**
