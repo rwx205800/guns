@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.stylefeng.guns.modular.system.model.Test;
 import cn.stylefeng.guns.modular.system.service.ITestService;
 
+import java.util.List;
+
 /**
  * renfei控制器
  *
@@ -65,6 +67,8 @@ public class TestController extends BaseController {
         if (StringUtils.isNullOrEmpty(condition)){
             return testService.selectList(null);
         }
+        List<Test>  testList = testService.getTest();
+        LogObjectHolder.me().set(testList);
         return testService.selectList(new EntityWrapper<Test>().eq("aaa", condition));
     }
 
